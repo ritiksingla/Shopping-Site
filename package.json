@@ -1,12 +1,11 @@
 {
   "name": "shopping-site",
   "version": "1.0.0",
-  "description": "MERN Stack Shopping Website",
+  "description": "Full Stack Shopping Website",
   "main": "app.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon app.js",
-    "start-server": "node app.js"
+    "start": "nodemon app.js"
   },
   "author": "Ritik Singla",
   "license": "ISC",
@@ -14,10 +13,19 @@
     "nodemon": "^2.0.6"
   },
   "dependencies": {
-    "body-parser": "^1.19.0",
+    "bcryptjs": "^2.4.3",
+    "config": "^3.3.3",
+    "connect-flash": "^0.1.1",
+    "connect-mongo": "^3.2.0",
+    "dotenv": "^8.2.0",
     "ejs": "^3.1.5",
     "express": "^4.17.1",
-    "express-handlebars": "^5.2.0",
-    "pug": "^3.0.0"
+    "express-session": "^1.17.1",
+    "express-validator": "^6.9.2",
+    "jsonwebtoken": "^8.5.1",
+    "mongodb": "^3.6.3",
+    "mongoose": "^5.11.12",
+    "passport": "^0.4.1",
+    "passport-local": "^1.0.0"
   }
 }

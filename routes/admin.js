@@ -6,19 +6,16 @@ const adminController = require('../controllers/admin');
 
 const router = express.Router();
 
-// /admin/add-product => GET
-router.get('/add-product', adminController.getAddProduct);
+router.get('/dashboard', adminController.getDashboard);
 
-// /admin/products => GET
-router.get('/products', adminController.getProducts);
+router.get('/add', adminController.getAdd);
+router.post('/add', adminController.postAdd);
 
-// /admin/add-product => POST
-router.post('/add-product', adminController.postAddProduct);
+router.get('/edit_delete', adminController.getEditDelete);
 
-router.get('/edit-product/:productId', adminController.getEditProduct);
+router.post('/edit', adminController.postEdit);
+router.get('/edit/:productId', adminController.getEdit);
 
-router.post('/edit-product', adminController.postEditProduct);
-
-router.post('/delete-product', adminController.postDeleteProduct);
+router.post('/delete', adminController.postDelete);
 
 module.exports = router;

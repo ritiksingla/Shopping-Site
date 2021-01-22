@@ -1,0 +1,36 @@
+<%- include('../includes/head.ejs') %>
+</head>
+
+<body>
+    <%- include('../includes/admin_nav.ejs') %>
+    <% if (prods.length > 0) { %>
+    <div class="container card-columns">
+        <% for (let product of prods) { %>
+        <div class="card">
+            <img class="card-img-top" src="<%= product.imageUrl %>" alt="<%= product.title %>">
+            <div class="card-body">
+                <h1 class="card-title"><%= product.title %></h1>
+                <p class="card-text"><%= product.description %></p>
+                <p class="card-text">$
+                    <%= product.price %>
+                </p>
+                <a href="/admin/edit/<%= product.id %>?edit=true"
+                    class="btn btn-primary form-control form-group">Edit</a>
+                <form action="/admin/delete" method="POST">
+                    <input type="hidden" value="<%= product.id %>" name="productId">
+                    <button class="btn btn-danger form-control form-group" type="submit">Delete</button>
+                </form>
+
+            </div>
+        </div>
+        <% } %>
+    </div>
+    <% } else { %>
+    <div class="jumbotron container">
+        <h1>No Products Here!</h1>
+        <p>Add the products from add product.</p>
+    </div>
+    <% } %>
+</body>
+
+</html>

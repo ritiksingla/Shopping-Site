@@ -1,71 +1,97 @@
 const Product = require('../models/product');
 
-exports.getAddProduct = (req, res, next) => {
-  res.render('admin/edit-product', {
-    pageTitle: 'Add Product',
-    path: '/admin/add-product',
-    editing: false
-  });
-};
-
-exports.postAddProduct = (req, res, next) => {
-  const title = req.body.title;
-  const imageUrl = req.body.imageUrl;
-  const price = req.body.price;
-  const description = req.body.description;
-  const product = new Product(null, title, imageUrl, description, price);
-  product.save();
-  res.redirect('/');
-};
-
-exports.getEditProduct = (req, res, next) => {
-  const editMode = req.query.edit;
-  if (!editMode) {
-    return res.redirect('/');
-  }
-  const prodId = req.params.productId;
-  Product.findById(prodId, product => {
-    if (!product) {
-      return res.redirect('/');
+exports.getDashboard = (req, res, next) => {
+  Product.find({}, function (error, products) {
+    if (error) {
+      throw error;
     }
-    res.render('admin/edit-product', {
-      pageTitle: 'Edit Product',
-      path: '/admin/edit-product',
-      editing: editMode,
-      product: product
-    });
-  });
-};
-
-exports.postEditProduct = (req, res, next) => {
-  const prodId = req.body.productId;
-  const updatedTitle = req.body.title;
-  const updatedPrice = req.body.price;
-  const updatedImageUrl = req.body.imageUrl;
-  const updatedDesc = req.body.description;
-  const updatedProduct = new Product(
-    prodId,
-    updatedTitle,
-    updatedImageUrl,
-    updatedDesc,
-    updatedPrice
-  );
-  updatedProduct.save();
-  res.redirect('/admin/products');
-};
-
-exports.getProducts = (req, res, next) => {
-  Product.fetchAll(products => {
-    res.render('admin/products', {
+    res.render('admin/dashboard', {
       prods: products,
       pageTitle: 'Admin Products',
-      path: '/admin/products'
+      path: '/admin/dashboard',
     });
   });
 };
 
-exports.postDeleteProduct = (req, res, next) => {
+exports.getEditDelete = (req, res, next) => {
+  Product.find({}, function (error, products) {
+    if (error) {
+      throw error;
+    }
+    res.render('admin/edit_delete', {
+      prods: products,
+      pageTitle: 'Admin Products',
+      path: '/admin/edit_delete',
+    });
+  });
+};
+
+exports.getAdd = (req, res, next) => {
+  res.render('admin/add', {
+    pageTitle: 'Add Product',
+    path: '/admin/add',
+    editing: false,
+  });
+};
+
+exports.postEdit = (req, res, next) => {
   const prodId = req.body.productId;
-  Product.deleteById(prodId);
-  res.redirect('/admin/products');
+  Product.updateOne(
+    { _id: prodId },
+    {
+      title: req.body.title,
+      imageUrl: req.body.imageUrl,
+      price: req.body.price,
+      description: req.body.description,
+    },
+    function (error, result) {
+      if (error) {
+        throw error;
+      }
+      res.redirect('/admin/edit_delete');
+    }
+  );
+};
+
+exports.postAdd = (req, res, next) => {
+  let product = new Product();
+  product.title = req.body.title;
+  product.imageUrl = req.body.imageUrl;
+  product.price = req.body.price;
+  product.description = req.body.description;
+  product.save(function (error) {
+    if (error) {
+      throw error;
+    }
+    res.redirect('/admin/dashboard');
+  });
+};
+
+exports.getEdit = (req, res, next) => {
+  const editMode = req.query.edit;
+  if (!editMode) {
+    return res.redirect('/admin/dashboard');
+  }
+  const prodId = req.params.productId;
+  Product.findOne({ _id: prodId }, function (error, product) {
+    if (!product || error) {
+      return res.redirect('/admin/dashboard');
+    }
+    res.render('admin/add', {
+      pageTitle: 'Editing Product',
+      path: '/admin/add',
+      editing: editMode,
+      product: product,
+    });
+  });
+};
+
+exports.postDelete = (req, res, next) => {
+  const prodId = req.body.productId;
+  Product.deleteOne({ _id: prodId }, function (errors, result) {
+    if (errors) {
+      throw errors;
+    }
+    res.redirect('/admin/edit_delete');
+  });
 };
