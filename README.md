@@ -1,6 +1,6 @@
 # Full Stack Shopping Website
 
-(MongoDB, React, Nodejs, Passport-Strategy)
+(MongoDB, Express, Nodejs, Passport-Strategy)
 
 ### User Shop without login
 ![User Shop](images/user_shop.png)
