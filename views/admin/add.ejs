@@ -2,7 +2,27 @@
 </head>
 
 <body>
-    <%- include('../includes/admin_nav.ejs') %>
+    <div class="container" style="margin-bottom: 10px;">
+        <ul class="nav nav-pills">
+            <li class="nav-item">
+                <a class="<%= path === '/admin/dashboard' ? 'active' : '' %> nav-link" href="/admin/dashboard">Shop</a>
+            </li>
+            <li class="nav-item">
+                <a class="<%= path === '/admin/add' ? 'active' : '' %> nav-link" href="/admin/add">Add
+                    Products
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="<%= path === '/admin/edit_delete' ? 'active' : '' %> nav-link"
+                    href="/admin/edit_delete">Modify
+                    Products
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="<%= path === '/admin/logout' ? 'active' : '' %> nav-link" href="/admin/logout">Logout</a>
+            </li>
+        </ul>
+    </div>
     <div class="container">
         <form class="was-validated" action="/admin/<% if (editing) { %>edit<% } else { %>add<% } %>" method="POST">
             <div class="form-group">

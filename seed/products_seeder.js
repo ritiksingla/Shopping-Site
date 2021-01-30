@@ -5,12 +5,20 @@ require('dotenv').config();
 mongoose.connect(process.env.MONGODB_URI, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
-  useCreateIndex: true,
-  useFindAndModify: true,
 });
+
+mongoose.connection.on('connected', () => {
+  console.log('MongoDB Connected:');
+});
+
+mongoose.connection.on(
+  'error',
+  console.error.bind(console, 'Connection Error:')
+);
 
 const products = [
   new Product({
+    email: 'ritiksingla28@gmail.com',
     title: 'Colorful Pencils',
     description: 'The best coloring pencils for the professional artists.',
     imageUrl:
@@ -18,6 +26,7 @@ const products = [
     price: 5.99,
   }),
   new Product({
+    email: 'ritiksingla28@gmail.com',
     title: 'Yellow Stationary',
     description: 'Yellow stationary set to make your notes organized.',
     imageUrl:
@@ -25,6 +34,7 @@ const products = [
     price: 9.99,
   }),
   new Product({
+    email: 'ritiksingla28@gmail.com',
     title: 'The Notebook',
     description:
       'Buy this notebook to note down all the important tips and codes daily.',
@@ -33,6 +43,7 @@ const products = [
     price: 10.99,
   }),
   new Product({
+    email: 'ritiksingla28@gmail.com',
     title: 'Parker Pen',
     description: 'Clickable pen to write your exams at the fastest speed.',
     imageUrl:
@@ -40,6 +51,7 @@ const products = [
     price: 6.99,
   }),
   new Product({
+    email: 'ritiksingla28@gmail.com',
     title: 'Exam Stationary',
     description: 'Best statinary set for giving your exams.',
     imageUrl:
@@ -47,6 +59,7 @@ const products = [
     price: 19.99,
   }),
   new Product({
+    email: 'ritiksingla28@gmail.com',
     title: 'Personal Computer',
     description: 'Fastest PC in the world for coding at the light speed.',
     imageUrl:

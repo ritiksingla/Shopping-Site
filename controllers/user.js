@@ -2,7 +2,6 @@ const Product = require('../models/product');
 const User = require('../models/user');
 const Order = require('../models/order');
 const Cart = require('../models/cart');
-const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
 const {

@@ -1,21 +1,32 @@
-const path = require('path');
-
 const express = require('express');
 
-const adminController = require('../controllers/admin');
+const controller = require('../controllers/admin');
 
 const router = express.Router();
 
-router.get('/dashboard', adminController.getDashboard);
+const {
+  forwardAuthentication,
+  ensureAuthentication,
+} = require('../config/adminAuth');
 
-router.get('/add', adminController.getAdd);
-router.post('/add', adminController.postAdd);
+router.get('/login', forwardAuthentication, controller.getLogin);
+router.post('/login', controller.postLogin);
 
-router.get('/edit_delete', adminController.getEditDelete);
+router.get('/register', forwardAuthentication, controller.getRegister);
+router.post('/register', controller.postRegister);
 
-router.post('/edit', adminController.postEdit);
-router.get('/edit/:productId', adminController.getEdit);
+router.get('/logout', ensureAuthentication, controller.postLogout);
 
-router.post('/delete', adminController.postDelete);
+router.get('/dashboard', ensureAuthentication, controller.getDashboard);
+
+router.get('/add', ensureAuthentication, controller.getAdd);
+router.post('/add', controller.postAdd);
+
+router.get('/edit_delete', ensureAuthentication, controller.getEditDelete);
+
+router.post('/edit', controller.postEdit);
+router.get('/edit/:productId', ensureAuthentication, controller.getEdit);
+
+router.post('/delete', controller.postDelete);
 
 module.exports = router;

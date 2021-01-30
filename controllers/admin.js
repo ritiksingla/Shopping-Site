@@ -1,7 +1,77 @@
 const Product = require('../models/product');
+const passport = require('passport');
+const bcrypt = require('bcryptjs');
+const User = require('../models/user');
+
+exports.getLogin = (req, res, next) => {
+  res.render('admin/login', {
+    pageTitle: 'Admin Login',
+    path: '/admin/login',
+    errorMessage: req.flash('error'),
+    successMessage: req.flash('success'),
+  });
+};
+
+exports.postLogin = function (req, res, next) {
+  passport.authenticate('local', {
+    successRedirect: '/admin/dashboard',
+    failiureRedirect: '/admin/login',
+    failiureFlash: true,
+  })(req, res, next);
+};
+
+exports.getRegister = function (req, res, next) {
+  res.render('admin/register', {
+    pageTitle: 'Register',
+    path: '/admin/register',
+    errorMessage: req.flash('error'),
+  });
+};
+
+exports.postRegister = function (req, res, next) {
+  try {
+    const { email, password, confirm_password } = req.body;
+    if (confirm_password !== password) {
+      req.flash('error', 'Passwords does not match');
+      return res.redirect('/admin/register');
+    }
+    User.findOne({ email: email }, function (error, result) {
+      if (result) {
+        req.flash('error', 'Email already exists');
+        return res.redirect('/admin/register');
+      } else {
+        bcrypt
+          .hash(password, 8)
+          .then((hashedPassword) => {
+            let user = new User();
+            user.email = email;
+            user.password = hashedPassword;
+            user.save(function (error) {
+              if (error) {
+                throw error;
+              }
+            });
+            req.flash('success', 'Successfully registered');
+            return res.redirect('/admin/login');
+          })
+          .catch((err) => {
+            throw err;
+          });
+      }
+    });
+  } catch (error) {
+    throw error;
+  }
+};
+
+exports.postLogout = function (req, res, next) {
+  req.logout();
+  req.flash('success', 'Successfully logged out');
+  res.redirect('/admin/login');
+};
 
 exports.getDashboard = (req, res, next) => {
-  Product.find({}, function (error, products) {
+  Product.find({ email: req.user.email }, function (error, products) {
     if (error) {
       throw error;
     }
@@ -14,7 +84,7 @@ exports.getDashboard = (req, res, next) => {
 };
 
 exports.getEditDelete = (req, res, next) => {
-  Product.find({}, function (error, products) {
+  Product.find({ email: req.user.email }, function (error, products) {
     if (error) {
       throw error;
     }
@@ -39,6 +109,7 @@ exports.postEdit = (req, res, next) => {
   Product.updateOne(
     { _id: prodId },
     {
+      email: req.user.email,
       title: req.body.title,
       imageUrl: req.body.imageUrl,
       price: req.body.price,
@@ -59,6 +130,7 @@ exports.postAdd = (req, res, next) => {
   product.imageUrl = req.body.imageUrl;
   product.price = req.body.price;
   product.description = req.body.description;
+  product.email = req.user.email;
   product.save(function (error) {
     if (error) {
       throw error;

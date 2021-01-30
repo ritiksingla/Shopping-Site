@@ -3,6 +3,7 @@ const {
   forwardAuthentication,
   ensureAuthentication,
 } = require('../config/auth');
+
 const controller = require('../controllers/user');
 const router = express.Router();
 

@@ -1,0 +1,26 @@
+<%- include('includes/head.ejs') %>
+</head>
+
+<body>
+    <div class="container">
+        <div class="jumbotron bg-info text-white">
+            <h1>Welcome to E-Commerce Website</h1>
+            <p>Login as a user to buy products at our site</p>
+            <p>Login as a admin to sell your own products at our site</p>
+        </div>
+        <div class="row"></div>
+        <div class="row">
+            <div class="col">
+                <button type="button" class="btn btn-primary btn-lg btn-block"
+                    onclick="location.href='/user/login'">User
+                </button>
+            </div>
+            <div class="col">
+                <button type="button" class="btn btn-secondary btn-lg btn-block"
+                    onclick="location.href='/admin/dashboard'">Admin</button>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>
