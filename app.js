@@ -59,6 +59,13 @@ app.use(
 // Express Messages Middleware
 app.use(flash());
 
+// Global variables
+app.use((req, res, next) => {
+  res.locals.success = req.flash('success');
+  res.locals.error = req.flash('error');
+  next();
+});
+
 // Passport middlewares
 app.use(passport.initialize());
 app.use(passport.session());

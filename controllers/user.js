@@ -4,10 +4,6 @@ const Order = require('../models/order');
 const Cart = require('../models/cart');
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
-const {
-  forwardAuthentication,
-  ensureAuthentication,
-} = require('../config/auth');
 
 exports.getShop = function (req, res, next) {
   Product.find({}, function (error, products) {
@@ -17,15 +13,12 @@ exports.getShop = function (req, res, next) {
     res.render('user/shop', {
       prods: products,
       pageTitle: 'Shop',
-      path: '/',
     });
   });
 };
 
-exports.getLogin = function (req, res, next) {
-  res.render('user/login', {
-    pageTitle: 'Login',
-    path: '/user/login',
+exports.getLoginRegister = function (req, res, next) {
+  res.render('user/login_register', {
     errorMessage: req.flash('error'),
     successMessage: req.flash('success'),
   });
@@ -34,17 +27,9 @@ exports.getLogin = function (req, res, next) {
 exports.postLogin = function (req, res, next) {
   passport.authenticate('local', {
     successRedirect: '/user/dashboard',
-    failiureRedirect: '/user/login',
+    failiureRedirect: '/user/login_register',
     failiureFlash: true,
   })(req, res, next);
-};
-
-exports.getRegister = function (req, res, next) {
-  res.render('user/register', {
-    pageTitle: 'Register',
-    path: '/user/register',
-    errorMessage: req.flash('error'),
-  });
 };
 
 exports.postRegister = function (req, res, next) {
@@ -52,12 +37,12 @@ exports.postRegister = function (req, res, next) {
     const { email, password, confirm_password } = req.body;
     if (confirm_password !== password) {
       req.flash('error', 'Passwords does not match');
-      return res.redirect('/user/register');
+      return res.redirect('/user/login_register');
     }
     User.findOne({ email: email }, function (error, result) {
       if (result) {
         req.flash('error', 'Email already exists');
-        return res.redirect('/user/register');
+        return res.redirect('/user/login_register');
       } else {
         bcrypt
           .hash(password, 8)
@@ -71,7 +56,7 @@ exports.postRegister = function (req, res, next) {
               }
             });
             req.flash('success', 'Successfully registered');
-            return res.redirect('/user/login');
+            return res.redirect('/user/login_register');
           })
           .catch((err) => {
             throw err;
@@ -86,7 +71,7 @@ exports.postRegister = function (req, res, next) {
 exports.postLogout = function (req, res, next) {
   req.logout();
   req.flash('success', 'Successfully logged out');
-  res.redirect('/user/login');
+  res.redirect('/user/login_register');
 };
 
 exports.getDashboard = function (req, res, next) {

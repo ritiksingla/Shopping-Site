@@ -3,28 +3,18 @@ const passport = require('passport');
 const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 
-exports.getLogin = (req, res, next) => {
-  res.render('admin/login', {
-    pageTitle: 'Admin Login',
-    path: '/admin/login',
-    errorMessage: req.flash('error'),
-    successMessage: req.flash('success'),
-  });
-};
-
 exports.postLogin = function (req, res, next) {
   passport.authenticate('local', {
     successRedirect: '/admin/dashboard',
-    failiureRedirect: '/admin/login',
+    failiureRedirect: '/admin/login_register',
     failiureFlash: true,
   })(req, res, next);
 };
 
-exports.getRegister = function (req, res, next) {
-  res.render('admin/register', {
-    pageTitle: 'Register',
-    path: '/admin/register',
+exports.getLoginRegister = function (req, res, next) {
+  res.render('admin/login_register', {
     errorMessage: req.flash('error'),
+    successMessage: req.flash('success'),
   });
 };
 
@@ -33,12 +23,12 @@ exports.postRegister = function (req, res, next) {
     const { email, password, confirm_password } = req.body;
     if (confirm_password !== password) {
       req.flash('error', 'Passwords does not match');
-      return res.redirect('/admin/register');
+      return res.redirect('/admin/login_register');
     }
     User.findOne({ email: email }, function (error, result) {
       if (result) {
         req.flash('error', 'Email already exists');
-        return res.redirect('/admin/register');
+        return res.redirect('/admin/login_register');
       } else {
         bcrypt
           .hash(password, 8)
@@ -52,7 +42,7 @@ exports.postRegister = function (req, res, next) {
               }
             });
             req.flash('success', 'Successfully registered');
-            return res.redirect('/admin/login');
+            return res.redirect('/admin/login_register');
           })
           .catch((err) => {
             throw err;
@@ -67,7 +57,7 @@ exports.postRegister = function (req, res, next) {
 exports.postLogout = function (req, res, next) {
   req.logout();
   req.flash('success', 'Successfully logged out');
-  res.redirect('/admin/login');
+  res.redirect('/admin/login_register');
 };
 
 exports.getDashboard = (req, res, next) => {

@@ -2,17 +2,20 @@ const express = require('express');
 const {
   forwardAuthentication,
   ensureAuthentication,
-} = require('../config/auth');
+} = require('../config/userAuth');
 
 const controller = require('../controllers/user');
 const router = express.Router();
 
 router.get('/shop', forwardAuthentication, controller.getShop);
 
-router.get('/login', forwardAuthentication, controller.getLogin);
-router.post('/login', controller.postLogin);
+router.get(
+  '/login_register',
+  forwardAuthentication,
+  controller.getLoginRegister
+);
 
-router.get('/register', forwardAuthentication, controller.getRegister);
+router.post('/login', controller.postLogin);
 router.post('/register', controller.postRegister);
 
 router.get('/dashboard', ensureAuthentication, controller.getDashboard);

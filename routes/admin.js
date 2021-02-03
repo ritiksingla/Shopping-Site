@@ -9,10 +9,12 @@ const {
   ensureAuthentication,
 } = require('../config/adminAuth');
 
-router.get('/login', forwardAuthentication, controller.getLogin);
+router.get(
+  '/login_register',
+  forwardAuthentication,
+  controller.getLoginRegister
+);
 router.post('/login', controller.postLogin);
-
-router.get('/register', forwardAuthentication, controller.getRegister);
 router.post('/register', controller.postRegister);
 
 router.get('/logout', ensureAuthentication, controller.postLogout);
