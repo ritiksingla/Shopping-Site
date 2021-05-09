@@ -1,9 +1,10 @@
 const mongoose = require('mongoose');
 
 const productSchema = mongoose.Schema({
-  email: {
-    type: String,
+  seller: {
+    type: mongoose.Schema.Types.ObjectId,
     required: true,
+    ref: 'User',
   },
   title: {
     type: String,
@@ -16,6 +17,9 @@ const productSchema = mongoose.Schema({
   imageUrl: {
     type: String,
     required: true,
+  },
+  cloudinary_id: {
+    type: String,
   },
   description: {
     type: String,

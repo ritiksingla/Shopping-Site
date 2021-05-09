@@ -45,23 +45,36 @@
     </li>
     </ul>
     </div>
-    <% if (prods.length > 0) { %>
     <div class="container">
-        <ul class="list-group">
-            <% prods.forEach(p => { %>
-            <li class="list-group-item d-flex justify-content-between align-items-center">
-                <%=p.title%>
-                <span class="badge badge-primary badge-pill"><%=p.qty%></span>
-            </li>
-            <% }) %>
-        </ul>
+        <form class="was-validated" action="/user/<% if (editing) { %>edit<% } else { %>add<% } %>" method="POST"
+            enctype="multipart/form-data">
+            <div class="form-group">
+                <label for="title">Title</label>
+                <input type="text" name="title" id="title" value="<% if (editing) { %><%= product.title %><% } %>"
+                    class="form-control" placeholder="Enter title" required>
+            </div>
+            <div class="form-group">
+                <label for="image">Image</label>
+                <input type="file" name="image" id="image" class="form-group" required>
+            </div>
+            <div class="form-group">
+                <label for="price">Price</label>
+                <input type="number" name="price" id="price" step="0.01"
+                    value="<% if (editing) { %><%= product.price %><% } %>" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="description">Description</label>
+                <textarea name="description" id="description" rows="5" class="form-control"
+                    required><% if (editing) { %><%= product.description %><% } %></textarea>
+            </div>
+            <% if (editing) { %>
+            <input type="hidden" value="<%= product.id %>" name="productId">
+            <% } %>
+
+            <button class="btn btn-primary" type="submit"><% if (editing) { %>Update Product<% } else { %>Add
+                Product<% } %></button>
+        </form>
     </div>
-    <% } else { %>
-    <div class="jumbotron container">
-        <h1>No order history!</h1>
-        <p>Add products to the cart from our shop and order now.</p>
-    </div>
-    <% } %>
 </body>
 
 </html>

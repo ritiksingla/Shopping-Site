@@ -2,21 +2,48 @@
 </head>
 
 <body>
-    <div class="container" style="margin-bottom: 10px;">
-        <ul class="nav nav-pills">
-            <li class="nav-item">
-                <a class="<%= path === '/user/dashboard' ? 'active' : '' %> nav-link" href="/user/dashboard">Shop</a>
-            </li>
-            <li class="nav-item">
-                <a class="<%= path === '/user/cart' ? 'active' : '' %> nav-link" href="/user/cart">Cart</a>
-            </li>
-            <li class="nav-item">
-                <a class="<%= path === '/user/order' ? 'active' : '' %> nav-link" href="/user/order">Orders</a>
-            </li>
-            <li class="nav-item">
-                <a class="<%= path === '/user/logout' ? 'active' : '' %> nav-link" href="/user/logout">Logout</a>
-            </li>
-        </ul>
+    <% if(error != '') {%>
+    <div class="alert alert-danger alert-dismissible fade show" role="alert">
+        <%= error %>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <%}%>
+    <% if(success != '') {%>
+    <div class="alert alert-success alert-dismissible fade show" role="alert">
+        <%= success %>
+        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+        </button>
+    </div>
+    <%}%>
+        <div class="container" style="margin-bottom: 10px;">
+            <ul class="nav nav-pills">
+                <li class="nav-item">
+                    <a class="<%= path === '/user/dashboard' ? 'active' : '' %> nav-link"
+    href="/user/dashboard">Shop</a>
+    </li>
+    <li class="nav-item">
+        <a class="<%= path === '/user/cart' ? 'active' : '' %> nav-link" href="/user/cart">Cart</a>
+    </li>
+    <li class="nav-item">
+        <a class="<%= path === '/user/order' ? 'active' : '' %> nav-link" href="/user/order">Orders</a>
+    </li>
+    <li class="nav-item">
+        <a class="<%= path === '/user/add' ? 'active' : '' %> nav-link" href="/user/add">Add
+            Products
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="<%= path === '/user/edit_delete' ? 'active' : '' %> nav-link" href="/user/edit_delete">Modify
+            Products
+        </a>
+    </li>
+    <li class="nav-item">
+        <a class="<%= path === '/user/logout' ? 'active' : '' %> nav-link" href="/user/logout">Logout</a>
+    </li>
+    </ul>
     </div>
     <% if (products.length > 0) { %>
     <div class="container card-columns">

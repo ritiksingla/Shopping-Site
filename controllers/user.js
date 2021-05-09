@@ -4,16 +4,16 @@ const Order = require('../models/order');
 const Cart = require('../models/cart');
 const bcrypt = require('bcryptjs');
 const passport = require('passport');
+const cloudinary = require('../utils/cloud');
 
-exports.getShop = function (req, res, next) {
-  Product.find({}, function (error, products) {
-    if (error) {
-      throw error;
-    }
-    res.render('user/shop', {
-      prods: products,
-      pageTitle: 'Shop',
-    });
+exports.getShop = async function (req, res, next) {
+  let products = await Product.find();
+  if (!products) {
+    return res.render(index);
+  }
+  res.render('user/shop', {
+    prods: products,
+    pageTitle: 'Shop',
   });
 };
 
@@ -32,39 +32,33 @@ exports.postLogin = function (req, res, next) {
   })(req, res, next);
 };
 
-exports.postRegister = function (req, res, next) {
-  try {
-    const { email, password, confirm_password } = req.body;
-    if (confirm_password !== password) {
-      req.flash('error', 'Passwords does not match');
-      return res.redirect('/user/login_register');
-    }
-    User.findOne({ email: email }, function (error, result) {
-      if (result) {
-        req.flash('error', 'Email already exists');
-        return res.redirect('/user/login_register');
-      } else {
-        bcrypt
-          .hash(password, 8)
-          .then((hashedPassword) => {
-            let user = new User();
-            user.email = email;
-            user.password = hashedPassword;
-            user.save(function (error) {
-              if (error) {
-                throw error;
-              }
-            });
-            req.flash('success', 'Successfully registered');
-            return res.redirect('/user/login_register');
-          })
-          .catch((err) => {
-            throw err;
-          });
-      }
-    });
-  } catch (error) {
-    throw error;
+exports.postRegister = async function (req, res, next) {
+  const { email, password, confirm_password } = req.body;
+  if (confirm_password !== password) {
+    req.flash('error', 'Passwords does not match');
+    return res.redirect('/user/login_register');
+  }
+  let user = await User.findOne({ email: email });
+  if (user) {
+    req.flash('error', 'User already registered with that email');
+    return res.redirect('/user/login_register');
+  }
+  let hashedPassword = await bcrypt.hash(password, 8);
+  if (!hashedPassword) {
+    req.flash('error', 'Backend Error');
+    return res.redirect('/user/login_register');
+  }
+  user = new User({
+    email: email,
+    password: hashedPassword,
+  });
+  user = await user.save();
+  if (!user) {
+    req.flash('error', 'Backend Error');
+    return res.redirect('/user/login_register');
+  } else {
+    req.flash('success', 'Successfully registered');
+    return res.redirect('/user/login_register');
   }
 };
 
@@ -74,16 +68,12 @@ exports.postLogout = function (req, res, next) {
   res.redirect('/user/login_register');
 };
 
-exports.getDashboard = function (req, res, next) {
-  Product.find({}, function (error, products) {
-    if (error) {
-      throw error;
-    }
-    res.render('user/dashboard', {
-      path: '/user/dashboard',
-      prods: products,
-      pageTitle: 'User Dashboard',
-    });
+exports.getDashboard = async (req, res, next) => {
+  let products = await Product.find();
+  res.render('user/dashboard', {
+    prods: products,
+    pageTitle: 'User Products',
+    path: '/user/dashboard',
   });
 };
 
@@ -180,4 +170,117 @@ exports.getOrder = function (req, res, next) {
       prods: products,
     });
   });
+};
+
+exports.getEditDelete = async (req, res, next) => {
+  let products = await Product.find({ seller: req.user._id });
+  res.render('user/edit_delete', {
+    prods: products,
+    pageTitle: 'User Products',
+    path: '/user/edit_delete',
+  });
+};
+
+exports.getAdd = (req, res, next) => {
+  return res.render('user/add', {
+    pageTitle: 'Add Product',
+    path: '/user/add',
+    editing: false,
+  });
+};
+
+exports.postEdit = async (req, res, next) => {
+  const { productId, title, price, description } = req.body;
+  let updates = {};
+  let product = await Product.findById(productId);
+  if (!product) {
+    req.flash('error', 'No item found');
+    return res.redirect('/user/edit_delete');
+  }
+  if (title) {
+    updates.title = title;
+  }
+  if (price) {
+    updates.price = price;
+  }
+  if (description) {
+    updates.description = description;
+  }
+  if (req.file) {
+    await cloudinary.uploader.destroy(product.cloudinary_id);
+    updates.imageUrl = req.file.path;
+    updates.cloudinary_id = req.file.filename;
+  }
+  product = await Product.findByIdAndUpdate(
+    productId,
+    { $set: updates },
+    { new: true }
+  );
+  if (product) {
+    req.flash('success', 'Product updated successfully');
+  } else {
+    req.flash('error', 'Backend Error');
+  }
+  return res.redirect('/user/edit_delete');
+};
+
+exports.postAdd = async (req, res, next) => {
+  const { title, price, description } = req.body;
+
+  // Check if product image is present
+  const file = req.file;
+  if (!file) {
+    req.flash('error', 'No image file found');
+    res.redirect('/user/add');
+  }
+
+  let product = new Product({
+    title: title,
+    price: price,
+    description: description,
+    seller: req.user._id,
+    imageUrl: file.path,
+    cloudinary_id: file.filename,
+  });
+  product = await product.save();
+  if (product) {
+    req.flash('success', 'Product added successfully');
+    res.redirect('/user/dashboard');
+  } else {
+    req.flash('error', 'Backend Error');
+    res.redirect('/user/add');
+  }
+};
+
+exports.getEdit = async (req, res, next) => {
+  const editMode = req.query.edit;
+  if (!editMode) {
+    return res.redirect('/user/dashboard');
+  }
+  const prodId = req.params.productId;
+  let product = await Product.findById(prodId).select(
+    '-imageUrl -cloudinary_id -seller'
+  );
+  if (!product) {
+    return res.redirect('/user/dashboard');
+  }
+  return res.render('user/add', {
+    pageTitle: 'Editing Product',
+    path: '/user/add',
+    editing: true,
+    product: product,
+  });
+};
+
+exports.postDelete = async (req, res, next) => {
+  const prodId = req.body.productId;
+  let product = await Product.findByIdAndDelete(prodId);
+  if (!product) {
+    req.flash('error', 'Backend Error');
+    res.redirect('/user/edit_delete');
+  } else {
+    await cloudinary.uploader.destroy(product.cloudinary_id);
+    req.flash('success', 'Product deleted successfully');
+    res.redirect('/user/dashboard');
+  }
 };

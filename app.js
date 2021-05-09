@@ -8,6 +8,7 @@ const flash = require('connect-flash');
 const passport = require('passport');
 const MongoStore = require('connect-mongo')(session);
 const errorController = require('./controllers/error');
+const cors = require('cors');
 // Inititalize the application
 const app = express();
 
@@ -17,14 +18,20 @@ require('./config/passportSetup')(passport);
 // Configure the dotenv module
 env.config();
 
+app.use(cors());
+app.options('*', cors());
+
 // Load View Engine
 app.set('view engine', 'ejs');
 app.set('views', 'views');
 
 // Database connection
 mongoose.connect(process.env.MONGODB_URI, {
+  useCreateIndex: true,
   useNewUrlParser: true,
+  useFindAndModify: false,
   useUnifiedTopology: true,
+  dbName: 'shop',
 });
 
 mongoose.connection.on('connected', () => {
@@ -71,11 +78,11 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // Express Routes
-const adminRoutes = require('./routes/admin');
+// const adminRoutes = require('./routes/admin');
 const userRoutes = require('./routes/user');
 const homeRoutes = require('./routes/home');
 
-app.use('/admin', adminRoutes);
+// app.use('/admin', adminRoutes);
 app.use('/user', userRoutes);
 
 app.use(homeRoutes);
