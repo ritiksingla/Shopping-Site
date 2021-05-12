@@ -21,6 +21,9 @@
     &-primary{
         @include set-background($primary-color);
     }
+    &-primary-home{
+        @include set-background($primary-home-color);
+    }
     &-light{
         @include set-background($light-color);
     }
@@ -57,6 +60,12 @@
             background: lighten($primary-color, 5%);
         }
     }
+    &.btn-primary-home{
+        @include set-background($primary-home-color);
+        &:hover{
+            background: lighten($primary-home-color, 5%);
+        }
+    }
     &.btn-success{
         @include set-background($success-color);
         &:hover{
@@ -89,4 +98,11 @@
     width: 100%;
     position: absolute;
     background-color: rgba(0, 0, 0, 0.7);
+}
+
+.light-overlay {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    background-color: rgba(0, 0, 0, 0.3);
 }

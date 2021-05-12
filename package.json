@@ -31,5 +31,13 @@
     "multer-storage-cloudinary": "^4.0.0",
     "passport": "^0.4.1",
     "passport-local": "^1.0.0"
-  }
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ritiksingla/Shopping-Site.git"
+  },
+  "bugs": {
+    "url": "https://github.com/ritiksingla/Shopping-Site/issues"
+  },
+  "homepage": "https://github.com/ritiksingla/Shopping-Site#readme"
 }

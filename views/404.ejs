@@ -1,12 +1,35 @@
-<%- include('includes/head.ejs') %>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Welcome to Ritik's Shop</title>
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+        integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+    <link rel="stylesheet" href="/dist/index.min.css">
 </head>
 
 <body>
-    <div class="jumbotron container">
-        <h1>Error 404!</h1>
-        <p>Page Not Found.</p>
-    </div>
-
+    <nav class="navbar bg-dark">
+        <h1>
+            <a href="/user/shop">
+                <i class="fas fa-shopping-bag"></i>
+                Start Shopping
+            </a>
+        </h1>
+    </nav>
+    <section class="landing">
+        <div class="dark-overlay">
+            <div class="landing-inner">
+                <h1 class="x-large">Page Not Found</h1>
+                <div class="buttons">
+                    <a href="/user/login_register" class="btn btn-primary">User Login</a>
+                </div>
+            </div>
+        </div>
+    </section>
 </body>
 
 </html>

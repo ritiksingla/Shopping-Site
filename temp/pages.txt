@@ -1,9 +1,0 @@
-ADMIN
-admin/dashboard - Admin can see all the existing products in the shop
-admin/add - Add a new product to the shop
-admin/edit_delete - Edit or Delete a product
-
-USER (don't use nav partial as it will change dynamically)
-user/shop - shop page if user is not logged in
-user/login - shop home page + login (should only open if user is logged out)
-user/dashboard - Same as admin/dashboard + Ability to add products to the cart (Should only work if user is logged in)

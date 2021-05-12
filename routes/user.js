@@ -80,6 +80,10 @@ router.get('/edit/:productId', ensureAuthentication, controller.getEdit);
 // Delete current user's product
 router.post('/delete', ensureAuthentication, controller.postDelete);
 
+// Profile
+router.get('/profile', ensureAuthentication, controller.getProfile);
+router.post('/profile', ensureAuthentication, controller.postProfile);
+
 // Logout
 router.get('/logout', ensureAuthentication, controller.postLogout);
 

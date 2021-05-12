@@ -7,7 +7,7 @@ module.exports = class Cart {
     } else {
       this.products = props.products;
       this.totalQuantity = props.totalQuantity;
-      this.totalPrice = props.totalPrice;
+      this.totalPrice = parseFloat(props.totalPrice);
     }
   }
   add(product, productId) {
@@ -16,20 +16,29 @@ module.exports = class Cart {
     }
     this.products[productId].qty++;
     this.products[productId].price =
-      this.products[productId].product.price * this.products[productId].qty;
+      parseFloat(this.products[productId].product.price) *
+      this.products[productId].qty;
+    this.products[productId].price = parseFloat(
+      this.products[productId].price
+    ).toFixed(2);
     this.totalQuantity++;
     this.totalPrice += this.products[productId].product.price;
+    this.totalPrice = parseFloat(this.totalPrice).toFixed(2);
   }
 
   deleteOne(product, productId) {
     this.products[productId].qty--;
     this.totalQuantity--;
-    const productPrice = this.products[productId].product.price;
+    let productPrice = parseFloat(this.products[productId].product.price);
     this.totalPrice -= productPrice;
+    this.totalPrice = parseFloat(this.totalPrice).toFixed(2);
     if (this.products[productId].qty === 0) {
       delete this.products[productId];
     } else {
       this.products[productId].price -= productPrice;
+      this.products[productId].price = parseFloat(
+        this.products[productId].price
+      ).toFixed(2);
     }
   }
 };

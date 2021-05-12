@@ -8,7 +8,7 @@
     <title><%= pageTitle %></title>
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
         integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
-    <link rel="stylesheet" href="/dist/order.min.css">
+    <link rel="stylesheet" href="/dist/profile.min.css">
 </head>
 
 <body>
@@ -21,14 +21,14 @@
         </h1>
         <ul>
             <li>
+                <a href="/user/order">Orders</a>
                 <a href="/user/cart">Cart</a>
                 <a href="/user/add">Sell Products</a>
                 <a href="/user/edit_delete">Edit Products</a>
-                <a href="/user/profile">Profile</a>
+                <a href="/user/logout">Logout</a>
             </li>
         </ul>
     </nav>
-    <% if (prods.length > 0) { %>
     <div class="form-wrapper">
         <% if(error != '') {%>
         <div class="error">
@@ -36,7 +36,7 @@
             <%=error%>
         </div>
         <%}%>
-            <% if(success != '') {%>
+        <% if(success != '') {%>
         <div class="success">
             <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
             <%=success%>
@@ -44,50 +44,38 @@
         <%}%>
         <div class="form-outer">
             <div class="form-inner">
-                <div class="order-history">
-                    <div class="order-title">
-                        <p>Your Order History</p>
-                        <button class="btn btn-primary-home">
-                            Print
-                        </button>
-                    </div>
-                    <hr>
-                    <div class="grid-container">
-                        <div class="item1">
-                            Product Details
-                        </div>
-                        <div class="item2">Quantity</div>
-                        <div class="item3">Date</div>
-                        <div class="item4">Price</div>
-                        <% for(const product of prods) {%>
-        <div class="product">
-            <img src="<%=product.item.imageUrl%>">
-            <div class="product-details">
-                <h4><%=product.item.title%></h4>
-            </div>
-        </div>
-        <div class="quantity"><%=product.qty%></div>
-        <div class="price"><%=product.date%></div>
-        <div class="total">$<%=product.price%>
-        </div>
-        <% }%>
+                <form action="/user/profile" method="POST">
+                    <div class="form-group">
+                        <label for="title">Email</label>
+                        <input type="email" name="email" id="email" value="<%=user.email%>" class="form-control"
+        required>
+    </div>
+    <div class="form-group">
+        <label for="name">Name</label>
+        <input type="text" name="name" id="name" value="<%=user.name%>" class="form-control">
+    </div>
+    <div class="form-group">
+        <label for="country">Country</label>
+        <input type="text" name="country" id="country" value="<%=user.address.country%>" class="form-control">
+    </div>
+    <div class="form-group">
+        <label for="city">City</label>
+        <input type="text" name="city" id="city" value="<%=user.address.city%>" class="form-control">
+    </div>
+    <div class="form-group">
+        <label for="address">Address</label>
+        <input type="text" name="address" id="address" value="<%=user.address.home%>" class="form-control">
+    </div>
+    <div class="form-group">
+        <label for="postalcode">Postal Code</label>
+        <input type="number" name="postalcode" id="postalcode" value="<%=user.address.postalCode%>"
+            class="form-control">
+    </div>
+    <button class="btn btn-primary-home" type="submit">Update</button>
+    </form>
     </div>
     </div>
     </div>
-    </div>
-    </div>
-    <% } else { %>
-    <div class="empty-order">
-        <div class="dark-overlay">
-            <div class="empty-order-inner">
-                <h1 class="x-large">No Order History</h1>
-                <div class="buttons">
-                    <a href="/user/dashboard" class="btn btn-primary-home">Go To Home Page</a>
-                </div>
-            </div>
-        </div>
-    </div>
-    <% } %>
     <footer class="bg-dark">
         <ul>
             <li>

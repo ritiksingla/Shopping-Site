@@ -9,6 +9,13 @@ const userSchema = mongoose.Schema({
     type: String,
     required: true,
   },
+  name: String,
+  address: {
+    city: String,
+    country: String,
+    home: String,
+    postalCode: Number,
+  },
 });
 const User = mongoose.model('User', userSchema);
 module.exports = User;

@@ -1,5 +1,6 @@
 // Variables
 $primary-color:#ff4b2b;
+$primary-home-color:#ff66cc;
 $dark-color:#343a40;
 $light-color:#f4f4f4;
 $danger-color:#dc3545;
@@ -13,6 +14,10 @@ $max-width:1100px;
     } @else {
         @return #fff;
     }
+}
+
+@function tint-color($color, $weight) {
+    @return mix(white, $color, $weight);
 }
 
 // Set background and text color

@@ -1,77 +1,91 @@
-<%- include('../includes/head.ejs') %>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title><%= pageTitle %></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css" />
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+        integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+    <link rel="stylesheet" href="/dist/edit_delete.min.css">
 </head>
 
 <body>
-    <% if(error != '') {%>
-    <div class="alert alert-danger alert-dismissible fade show" role="alert">
-        <%= error %>
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <%}%>
-                      <% if(success != '') {%>
-    <div class="alert alert-success alert-dismissible fade show" role="alert">
-        <%= success %>
-        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-            <span aria-hidden="true">&times;</span>
-        </button>
-    </div>
-    <%}%>
-        <div class="container" style="margin-bottom: 10px;">
-            <ul class="nav nav-pills">
-                <li class="nav-item">
-                    <a class="<%= path === '/user/dashboard' ? 'active' : '' %> nav-link"
-    href="/user/dashboard">Shop</a>
-    </li>
-    <li class="nav-item">
-        <a class="<%= path === '/user/cart' ? 'active' : '' %> nav-link" href="/user/cart">Cart</a>
-    </li>
-    <li class="nav-item">
-        <a class="<%= path === '/user/order' ? 'active' : '' %> nav-link" href="/user/order">Orders</a>
-    </li>
-    <li class="nav-item">
-        <a class="<%= path === '/user/add' ? 'active' : '' %> nav-link" href="/user/add">Add
-            Products
-        </a>
-    </li>
-    <li class="nav-item">
-        <a class="<%= path === '/user/edit_delete' ? 'active' : '' %> nav-link" href="/user/edit_delete">Modify
-            Products
-        </a>
-    </li>
-    <li class="nav-item">
-        <a class="<%= path === '/user/logout' ? 'active' : '' %> nav-link" href="/user/logout">Logout</a>
-    </li>
-    </ul>
-    </div>
+    <nav class="navbar bg-dark">
+        <h1>
+            <a href="/user/dashboard">
+                <i class="fas fa-shopping-bag"></i>
+                Start Shopping
+            </a>
+        </h1>
+        <ul>
+            <li>
+                <a href="/user/order">Orders</a>
+                <a href="/user/cart">Cart</a>
+                <a href="/user/add">Sell Products</a>
+                <a href="/user/profile">Profile</a>
+            </li>
+        </ul>
+    </nav>
     <% if (prods.length > 0) { %>
-    <div class="container card-columns">
-        <% for (let product of prods) { %>
-        <div class="card">
-            <img class="card-img-top" src="<%= product.imageUrl %>" alt="<%= product.title %>">
-            <div class="card-body">
-                <h1 class="card-title"><%= product.title %></h1>
-                <p class="card-text"><%= product.description %></p>
-                <p class="card-text">$
-                    <%= product.price %>
-                </p>
-                <a href="/user/edit/<%= product.id %>?edit=true"
-                    class="btn btn-primary form-control form-group">Edit</a>
-                <form action="/user/delete" method="POST">
-                    <input type="hidden" value="<%= product.id %>" name="productId">
-                    <button class="btn btn-danger form-control form-group" type="submit">Delete</button>
+    <div class="card-wrapper">
+        <% if(error != '') {%>
+        <div class="error">
+            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+            <%=error%>
+        </div>
+        <%}%>
+            <% if(success != '') {%>
+        <div class="success">
+            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+            <%=success%>
+        </div>
+        <%}%>
+        <% for (const product of prods) { %>
+        <div class="card-outer">
+            <div class="card-content animated fadeInLeft">
+                <span class="card-bg animated fadeInDown">EXCLUSIVE</span>
+                <h1><%= product.title %></h1>
+                <p><%= product.description %></p>
+                <form action="/user/delete" method="post">
+                    <div class="card-button">
+                        <button type="button">$<%= product.price %></button>
+                        <button onclick="location.href='/user/edit/<%= product.id %>?edit=true'"
+                            type="button">Edit</button>
+                        <button type="submit">
+                            <i class="cart-icon fas fa-delete"></i>DELETE
+                        </button>
+                        <input type="hidden" name="productId" value="<%= product.id %>">
+                    </div>
                 </form>
-
             </div>
+            <img src="<%= product.imageUrl %>" alt="<%= product.title %>" width="300px"
+                class="card-img animated fadeInRight">
         </div>
         <% } %>
     </div>
     <% } else { %>
-    <div class="jumbotron container">
-        <h1>No Products Here!</h1>
-        <p>Add your products from add product and start selling today!.</p>
+    <div class="empty-shelves">
+        <div class="dark-overlay">
+            <div class="empty-shelves-inner">
+                <h1 class="x-large">Empty Shelves. Come Back Later.</h1>
+                <div class="buttons">
+                    <a href="/user/dashboard" class="btn btn-primary-home">Go To Home Page</a>
+                </div>
+            </div>
+        </div>
     </div>
+    <footer class="bg-dark">
+        <ul>
+            <li>
+                <a href="/user/dashboard">Top Brands</a> |
+                <a href="/user/dashboard">Browse Categories</a> |
+                <a href="/user/dashboard">View All Products</a>
+            </li>
+        </ul>
+    </footer>
     <% } %>
 </body>
 

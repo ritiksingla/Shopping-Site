@@ -1,28 +1,69 @@
-<%- include('../includes/head.ejs') %>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title><%= pageTitle %></title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/3.5.2/animate.min.css" />
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css"
+        integrity="sha384-AYmEC3Yw5cVb3ZcuHtOA93w35dYTsvhLPVnYs9eStHfGJvOvKxVfELGroGkvsg+p" crossorigin="anonymous" />
+    <link rel="stylesheet" href="/dist/edit_delete.min.css">
 </head>
 
 <body>
+    <nav class="navbar bg-dark">
+        <h1>
+            <a href="/user/dashboard">
+                <i class="fas fa-shopping-bag"></i>
+                Start Shopping
+            </a>
+        </h1>
+        <ul>
+            <li>
+                <a href="/user/login_register">Login</a>
+                <a href="/user/login_register">Register</a>
+            </li>
+        </ul>
+    </nav>
     <% if (prods.length > 0) { %>
-    <div class="container card-columns">
+    <div class="card-wrapper">
+        <% if(error != '') {%>
+        <div class="error">
+            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+            <%=error%>
+        </div>
+        <%}%>
+            <% if(success != '') {%>
+        <div class="success">
+            <span class="closebtn" onclick="this.parentElement.style.display='none';">&times;</span>
+            <%=success%>
+        </div>
+        <%}%>
         <% for (const product of prods) { %>
-        <div class="card">
-            <img class="card-img-top" src="<%= product.imageUrl %>" alt="<%= product.title %>">
-            <div class="card-body">
-                <h4 class="card-title"><%= product.title %></h4>
-                <p class="card-text"><%= product.description %></p>
-                <div>
-                    <b>$</b>
-                    <%= product.price %>
+        <div class="card-outer">
+            <div class="card-content animated fadeInLeft">
+                <span class="card-bg animated fadeInDown">EXCLUSIVE</span>
+                <h1><%= product.title %></h1>
+                <p><%= product.description %></p>
+                <div class="card-button">
+                    <button>Price</button>
+                    <button type="button">$<%= product.price %></button>
+                    <button>Only</button>
                 </div>
             </div>
+            <img src="<%= product.imageUrl %>" alt="<%= product.title %>" class="card-img animated fadeInRight">
         </div>
         <% } %>
     </div>
     <% } else { %>
-    <div class="jumbotron container">
-        <h1>No Products In The Shop!</h1>
-        <p>There are currently no product in our Shop.</p>
-        <p>Please try again later.</p>
+    <div class="empty-shelves">
+        <div class="dark-overlay">
+            <div class="empty-shelves-inner">
+                <h1 class="x-large">Empty Shelves. Come Back Later.</h1>
+            </div>
+        </div>
     </div>
     <% } %>
 </body>

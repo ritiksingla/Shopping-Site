@@ -1,0 +1,251 @@
+@import 'config';
+@import 'utilities';
+@import url('https://fonts.googleapis.com/css?family=Montserrat:400,800');
+
+// Setting the border-box style for making the total width and height exact
+// Removing default padding and margin
+* {
+    box-sizing: border-box;
+    margin:0;
+    padding: 0;
+}
+
+// Body
+body {
+    font-family: 'Montserrat', sans-serif;
+    font-size: 1rem;
+    line-height: 1.6;
+    background-color: $light-color;
+    color: #333;
+}
+
+// Links
+a {
+    text-decoration: none;
+    color:$primary-home-color;
+}
+
+ul{
+    list-style: none;
+}
+
+.navbar{
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0.7rem 2rem;
+    position: fixed;
+    top:0;
+    z-index: 1;
+    width: 100%;
+    border-bottom: solid 1px $primary-home-color;
+    opacity: 0.9;
+    
+    ul {
+        display: flex;
+    }
+
+    a{
+        color: #fff;
+        padding: 0.45rem;
+        margin: 0 0.25rem;
+
+        &:hover{
+            color: $primary-home-color;
+        }
+    }
+}
+
+.empty-shelves {
+  display: flex;
+	justify-content: space-evenly;
+	align-items: center;
+  flex-wrap: wrap;
+  background: url('https://t3.ftcdn.net/jpg/03/26/00/92/240_F_326009297_MPHWvpbZWDnkOYRpbaYnnYg3NnUxDN2P.jpg')
+  no-repeat center center/cover;
+  height: 100vh;
+  &-inner {
+      color:#fff;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      width: 80%;
+      margin: auto;
+      align-items: center;
+      justify-content: center;
+      text-align: center;
+      @media screen and (max-width:750px) {
+        h1{
+          font-size: 2em;
+        }
+      }
+    }
+}
+footer{
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0.5rem 2rem;
+  position: fixed;
+  bottom:0;
+  z-index: 1;
+  width: 100%;
+  border-bottom: solid 1px $primary-home-color;
+  opacity: 0.9;
+  
+  ul {
+      display: flex;
+  }
+
+  a{
+      color: #fff;
+      font-size: 1em;
+      padding: 0.45rem;
+      margin: 0 0.25rem;
+
+      &:hover{
+          color: $primary-home-color;
+      }
+  }
+}
+
+.card-wrapper {
+	display: flex;
+  margin-top: 100px;
+  flex-direction: column;
+  background-color: $light-color;
+	justify-content: space-evenly;
+	align-items: center;
+  flex-wrap: wrap;
+}
+
+.card-outer {
+	position: relative;
+	background: #fff;
+	height: 20rem;
+	width: 30rem;
+	overflow: hidden;
+	display: flex;
+  margin:10px;
+	align-items: center;
+}
+
+.card-img {
+	position: absolute;
+	top: 0px;
+	right: -20px;
+  height: 100%;
+  width: 15rem;
+	z-index: 0;
+	animation-delay: 0.5s;
+}
+
+.card-content {
+	animation-delay: 0.3s;
+	position: absolute;
+	left: 10px;
+	z-index: 3
+  h1 {
+    color: #111;
+  }
+  p {
+    width: 15rem;
+    font-size: 13px;
+    line-height: 1.4;
+    color: #aaa;
+    margin: 20px 0;
+  }
+}
+
+.card-bg {
+	display: inline-block;
+	color: #fff;
+	background: cornflowerblue;
+	padding: 5px 10px;
+	border-radius: 50px;
+	font-size: .7em;
+}
+.card-button {
+	width: fit-content;
+	height: fit-content;
+	margin-top: 10px;
+  button {
+    display: inline-block;
+    background: unset;
+    overflow: hidden;
+    position: relative;
+    font-size: 11px;
+    color: #111;
+    text-decoration: none;
+    padding: 10px 15px;
+    border: 1px solid #aaa;
+    font-weight: bold;
+  }
+  button:after{
+    content: "";
+    position: absolute;
+    top: 0;
+    right: -10px;
+    width: 0%;
+    background: #111;
+    height: 100%;
+    z-index: -1;
+    transition: width 0.3s ease-in-out;
+    transform: skew(-25deg);
+    transform-origin: right;
+  }
+  button:hover:after {
+    width: 150%;
+    left: -10px;
+    transform-origin: left;
+    
+  }
+  button:hover {
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.5s ease;
+  }
+  button:nth-of-type(1) {
+    border-radius: 50px 0 0 50px;
+    border-right: none;
+  }
+  button:nth-of-type(2) {
+    border-radius: 0px 50px 50px 0;
+  }
+}
+
+.cart-icon {
+	padding-right: 8px;
+}
+
+.error {
+  padding: 10px;
+  width: 20rem;
+  background-color: $danger-color; /* Red */
+  color: white;
+  margin-bottom: 10px;
+}
+
+.success {
+  padding: 10px;
+  width: 20rem;
+  background-color: $success-color;
+  color: white;
+  margin-bottom: 10px;
+}
+
+.closebtn {
+  margin-left: 15px;
+  color: white;
+  font-weight: bold;
+  float: right;
+  font-size: 22px;
+  line-height: 20px;
+  cursor: pointer;
+  transition: 0.3s;
+}
+
+/* When moving the mouse over the close button */
+.closebtn:hover {
+  color: black;
+}
