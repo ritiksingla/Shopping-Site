@@ -1,41 +1,43 @@
 const express = require('express');
-const controller = require('../controllers/user');
-const router = express.Router();
-const {
-  forwardAuthentication,
-  ensureAuthentication,
-} = require('../config/userAuth');
 const multer = require('multer');
 const cloudinary = require('cloudinary').v2;
 const { CloudinaryStorage } = require('multer-storage-cloudinary');
 
+const {
+	forwardAuthentication,
+	ensureAuthentication,
+} = require('../config/userAuth');
+const controller = require('../controllers/user');
+
+const router = express.Router();
+
 const FILE_TYPE_MAP = {
-  'image/png': 'png',
-  'image/jpeg': 'jpeg',
-  'image/jpg': 'jpg',
+	'image/png': 'png',
+	'image/jpeg': 'jpeg',
+	'image/jpg': 'jpg',
 };
 
 const storage = new CloudinaryStorage({
-  cloudinary: cloudinary,
-  params: {
-    folder: 'shop',
-    allowedFormats: ['jpg', 'png', 'jpeg'],
-    public_id: (req, file) => {
-      const fileName = file.originalname.split(' ').join('-');
-      const extension = FILE_TYPE_MAP[file.mimetype];
-      return `${fileName}-${Date.now()}.${extension}`;
-    },
-  },
+	cloudinary,
+	params: {
+		folder: 'shop',
+		allowedFormats: ['jpg', 'png', 'jpeg'],
+		public_id: (req, file) => {
+			const fileName = file.originalname.split(' ').join('-');
+			const extension = FILE_TYPE_MAP[file.mimetype];
+			return `${fileName}-${Date.now()}.${extension}`;
+		},
+	},
 });
 
-const uploadOptions = multer({ storage: storage });
+const uploadOptions = multer({ storage });
 
 router.get('/shop', forwardAuthentication, controller.getShop);
 
 router.get(
-  '/login_register',
-  forwardAuthentication,
-  controller.getLoginRegister
+	'/login_register',
+	forwardAuthentication,
+	controller.getLoginRegister
 );
 
 // Login Register
@@ -59,10 +61,10 @@ router.post('/checkout', ensureAuthentication, controller.postCheckout);
 // Add product
 router.get('/add', ensureAuthentication, controller.getAdd);
 router.post(
-  '/add',
-  ensureAuthentication,
-  uploadOptions.single('image'),
-  controller.postAdd
+	'/add',
+	ensureAuthentication,
+	uploadOptions.single('image'),
+	controller.postAdd
 );
 
 // Choose to Edit or Delete current user's product
@@ -70,10 +72,10 @@ router.get('/edit_delete', ensureAuthentication, controller.getEditDelete);
 
 // Edit current user's product
 router.post(
-  '/edit',
-  ensureAuthentication,
-  uploadOptions.single('image'),
-  controller.postEdit
+	'/edit',
+	ensureAuthentication,
+	uploadOptions.single('image'),
+	controller.postEdit
 );
 router.get('/edit/:productId', ensureAuthentication, controller.getEdit);
 

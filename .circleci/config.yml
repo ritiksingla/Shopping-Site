@@ -1,0 +1,38 @@
+version: 2.1
+
+workflows:
+  deploy:
+    jobs:
+      - deploy:
+          context: Azure Login
+
+jobs:
+  deploy:
+    docker:
+      - image: cimg/node:16.14.2
+    working_directory: ~/ecommerce
+    steps:
+      - checkout
+      - run:
+          name: Check node version
+          command: node --version
+      - restore_cache:
+          key: ecommerce-{{ .Branch }}-{{ checksum "package-lock.json" }}
+      - run:
+          name: Install dependencies
+          command: npm ci
+      - save_cache:
+          paths:
+            - node_modules
+          key: ecommerce-{{ .Branch }}-{{ checksum "package-lock.json" }}
+      - setup_remote_docker:
+          version: 20.10.11
+      - run:
+          name: Build docker image
+          command: docker build -t ritiksingla.azurecr.io/ecommerce:2.0 .
+      - run:
+          name: Login to azure
+          command: docker login --username $DOCKER_USER --password $DOCKER_PASSWORD ritiksingla.azurecr.io
+      - run:
+          name: Push image to azure container registry
+          command: docker push ritiksingla.azurecr.io/ecommerce:2.0

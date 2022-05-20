@@ -1,0 +1,21 @@
+version: "3.8"
+
+services:
+  ecommerce:
+    container_name: c_ecommerce
+    image: ritiksingla.azurecr.io/ecommerce:2.0
+    build:
+      context: .
+      dockerfile: Dockerfile
+    env_file:
+      - src/config.env
+    ports:
+      - "5000:5000"
+    networks:
+      - nodeapp-network
+    volumes:
+      - ${PWD}/src:/usr/app/src
+      - /usr/app/node_modules
+networks:
+  nodeapp-network:
+    driver: bridge
